@@ -1,0 +1,7 @@
+com/pica/javeriana/xmlns/contableservice/OrdenFinalizada.class
+com/pica/javeriana/xmlns/contableservice/PagoRealizado.class
+com/pica/javeriana/xmlns/contableservice/RespuestaGenerica.class
+com/pica/javeriana/xmlns/contableservice/package-info.class
+com/contable/services/ContableService_Service.class
+com/contable/services/ContableService.class
+com/pica/javeriana/xmlns/contableservice/ObjectFactory.class

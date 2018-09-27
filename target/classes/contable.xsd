@@ -1,0 +1,45 @@
+<schema attributeFormDefault="unqualified"
+	elementFormDefault="qualified"
+	targetNamespace="http://xmlns.javeriana.pica.com/ContableService"
+	xmlns="http://www.w3.org/2001/XMLSchema"
+          xmlns:tns="http://xmlns.javeriana.pica.com/ContableService">
+ 
+    <element name="OrdenFinalizada"> 
+    	<complexType>
+            <sequence>
+                <element name="transactionID" type="string" nillable="true"/>
+                <element name="transactionNumber" type="string" nillable="true"/>
+                <element name="transactionYear" type="string" nillable="true"/>
+                <element name="transactionMonth" type="string" nillable="true"/>
+                <element name="transactionDay" type="string"/>	
+                <element name="acountID" type="string" nillable="true"/>
+                <element name="withDrawalAmount" type="string" nillable="true"/>
+                <element name="depositAmount" type="string" nillable="true"/>     
+            </sequence>
+        </complexType>
+    </element>
+
+    <element name="PagoRealizado"> 
+        <complexType>
+            <sequence>
+                <element name="transactionID" type="string" nillable="true"/>
+                <element name="transactionNumber" type="string" nillable="true"/>
+                <element name="transactionYear" type="string" nillable="true"/>
+                <element name="transactionMonth" type="string" nillable="true"/>
+                <element name="transactionDay" type="string"/>  
+                <element name="acountID" type="string" nillable="true"/>
+                <element name="withDrawalAmount" type="string" nillable="true"/>
+                <element name="depositAmount" type="string" nillable="true"/>     
+            </sequence>
+        </complexType>
+    </element> 
+    
+    <element name="respuestaGenerica">
+        <complexType>
+            <sequence>
+                <element name="result" type="boolean"/>
+            </sequence>
+        </complexType>
+    </element>
+
+</schema>   

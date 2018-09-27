@@ -1,0 +1,19 @@
+Manifest-Version: 1.0
+Bnd-LastModified: 1536548326730
+Build-Jdk: 1.8.0_121
+Built-By: arkazero
+Bundle-Description: AVIANCA ::: PROVEEDOR DE TRANSPORTES AEREOS
+Bundle-License: http://www.apache.org/licenses/LICENSE-2.0.html
+Bundle-ManifestVersion: 2
+Bundle-Name: Aereo - Avianca
+Bundle-SymbolicName: com.javariana.pica.contabilidad
+Bundle-Version: 1.0.0.SNAPSHOT
+Created-By: Apache Maven Bundle Plugin
+Export-Package: co.ogv.anh.services;version="1.0.0"
+Import-Package: javax.jws,javax.jws.soap,javax.validation.constraints;ve
+ rsion="[1.1,2)",javax.xml.bind.annotation,javax.xml.namespace,javax.xml
+ .ws,org.apache.activemq.camel.component,org.apache.camel.builder;versio
+ n="[2.17,3)",org.apache.cxf.interceptor;version="[3.1,4)",org.hibernate
+ .validator.constraints;version="[5.0,6)",org.slf4j;version="[1.7,2)"
+Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=1.8))"
+Tool: Bnd-3.5.0.201709291849

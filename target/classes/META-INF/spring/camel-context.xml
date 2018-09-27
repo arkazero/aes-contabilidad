@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Configures the Camel Context -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:camel="http://camel.apache.org/schema/spring"
+    xmlns:ctx="http://www.springframework.org/schema/context"
+    xmlns:cxf="http://camel.apache.org/schema/cxf"
+    xmlns:http-conf="http://cxf.apache.org/transports/http/configuration"
+    xmlns:jee="http://www.springframework.org/schema/jee"
+    xmlns:osgi="http://www.springframework.org/schema/osgi"
+    xmlns:osgix="http://www.springframework.org/schema/osgi-compendium"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://camel.apache.org/schema/cxf       http://camel.apache.org/schema/cxf/camel-cxf.xsd           http://www.springframework.org/schema/beans       http://www.springframework.org/schema/beans/spring-beans.xsd              http://camel.apache.org/schema/spring       http://camel.apache.org/schema/spring/camel-spring.xsd              http://www.springframework.org/schema/jee       http://www.springframework.org/schema/jee/spring-jee.xsd              http://www.springframework.org/schema/context       http://www.springframework.org/schema/context/spring-context.xsd              http://www.springframework.org/schema/osgi-compendium       http://www.springframework.org/schema/osgi-compendium/spring-osgi-compendium.xsd              http://www.springframework.org/schema/osgi       http://www.springframework.org/schema/osgi/spring-osgi.xsd              http://cxf.apache.org/transports/http/configuration       http://cxf.apache.org/schemas/configuration/http-conf.xsd">
+    <import resource="properties-beans.xml"/>
+    <!-- Logging conf -->
+    <bean class="org.slf4j.LoggerFactory" factory-method="getLogger" id="contableLog">
+        <constructor-arg type="java.lang.String" value="com.contable.services"/>
+    </bean>
+    <bean class="org.apache.activemq.camel.component.ActiveMQComponent" id="activemq">
+        <property name="brokerURL" value="tcp://localhost:61616"/>
+        <property name="userName" value="admin"/>
+        <property name="password" value="admin"/>
+    </bean>
+    <bean class="org.apache.camel.builder.LoggingErrorHandlerBuilder " id="loggingErrorHandler">
+        <property name="logName" value="mylogger.name"/>
+        <property name="level" value="DEBUG"/>
+    </bean>
+    <!-- Generacion del PROXY -->
+    <cxf:cxfEndpoint address="${cxf.server}/ContabilidadService"
+        id="servicioContableService" serviceClass="com.contable.services.ContableService">
+        <cxf:properties>
+            <entry key="dataFormat" value="PAYLOAD"/>
+            <entry key="soap.no.validate.parts" value="true"/>
+            <entry key="receiveTimeout" value="1000000000"/>
+            <entry key="connectionTimeout" value="1000000000"/>
+            <entry key="setDefaultBus" value="true"/>
+            <entry key="loggingFeatureEnabled" value="true"/>
+        </cxf:properties>
+        <cxf:inInterceptors>
+            <!-- <ref bean="authenticationInterceptor"/> <ref bean="SystemCodeInInterceptor"/> -->
+            <ref bean="loggingInInterceptor"/>
+        </cxf:inInterceptors>
+        <cxf:outInterceptors>
+            <ref bean="loggingOutInterceptor"/>
+        </cxf:outInterceptors>
+    </cxf:cxfEndpoint>
+    <!-- interceptors -->
+    <!-- Log interceptors -->
+    <bean class="org.apache.cxf.interceptor.LoggingInInterceptor" id="loggingInInterceptor"/>
+    <bean class="org.apache.cxf.interceptor.LoggingOutInterceptor" id="loggingOutInterceptor"/>
+    <bean
+        class="com.pica.javeriana.xmlns.contableservice.OrdenFinalizada" id="OrdenFinalizada"/>
+    <bean class="com.pica.javeriana.xmlns.contableservice.PagoRealizado" id="PagoRealizado"/>
+    <camelContext id="_camelContext1"
+        xmlns="http://camel.apache.org/schema/spring" xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
+        <route id="_route1" streamCache="true" trace="false">
+            <from id="_from1" uri="cxf:bean:servicioContableService"/>
+            <choice id="seleccione_opcion">
+                <when id="_when1">
+                    <simple>${header.operationName} == 'saveOrden'</simple>
+                    <log id="log3" loggingLevel="INFO" message="\n\nAntes de bean ${body}"/>
+                    <unmarshal id="_unmarshal1">
+                        <jaxb
+                            contextPath="com.pica.javeriana.xmlns.contableservice"
+                            encoding="UTF-8" prettyPrint="true"/>
+                    </unmarshal>
+                    <to id="_to1" uri="bean-validator://validate-request">
+                        <description>Validate all required fields</description>
+                    </to>
+                    <log id="log3" loggingLevel="INFO" message="\n\nDespues de velocity ${body}"/>
+                    <to id="_to4" uri="activemq:queue:order?disableTimeToLive=true&amp;disableReplyTo=true"/>
+                </when>
+                <when id="_when2">
+                    <simple>${header.operationName} == 'savePago'</simple>
+                    <log id="log3" loggingLevel="INFO" message="\n\nAntes de bean ${body}"/>
+                    <unmarshal id="_unmarshal1">
+                        <jaxb
+                            contextPath="com.pica.javeriana.xmlns.contableservice"
+                            encoding="UTF-8" prettyPrint="true"/>
+                    </unmarshal>
+                    <to id="_to1" uri="bean-validator://validate-request">
+                        <description>Validate all required fields</description>
+                    </to>
+                    <log id="log3" loggingLevel="INFO" message="\n\nDespues de bean ${body}"/>
+                    <to id="_to4" uri="activemq:queue:pago?disableTimeToLive=true&amp;disableReplyTo=true"/>
+                </when>
+            </choice>
+        </route>
+    </camelContext>
+</beans>

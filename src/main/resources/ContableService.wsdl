@@ -1,0 +1,83 @@
+<definitions
+     name="ContableService"
+     targetNamespace="http://services.contable.com/"
+     xmlns="http://schemas.xmlsoap.org/wsdl/"
+     xmlns:tns="http://services.contable.com/"
+     xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/"
+     xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/"
+     xmlns:tns0="http://services.contable.com/types/"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+     xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+     xmlns:Contable ="http://xmlns.javeriana.pica.com/ContableService"                
+    >
+
+    <types>
+        <xsd:schema>
+            <xsd:import namespace="http://xmlns.javeriana.pica.com/ContableService" schemaLocation="contable.xsd"/>
+         </xsd:schema>
+    </types>   
+    
+    <message name="ContableService_saveOrden">
+        <part name="parameters" element="Contable:OrdenFinalizada"/>
+    </message>
+    <message name="ContableService_saveOrdenResponse">
+        <part name="parameters" element="Contable:respuestaGenerica"/>
+    </message>
+
+    <message name="ContableService_savePago">
+        <part name="parameters" element="Contable:PagoRealizado"/>
+    </message>
+    <message name="ContableService_savePagoResponse">
+        <part name="parameters" element="Contable:respuestaGenerica"/>
+    </message>
+
+
+
+
+    <portType name="ContableService">
+        <operation name="saveOrden">
+            <input message="tns:ContableService_saveOrden"/>
+            <output message="tns:ContableService_saveOrdenResponse"/>
+        </operation>
+        <operation name="savePago">
+            <input message="tns:ContableService_savePago"/>
+            <output message="tns:ContableService_savePagoResponse"/>
+        </operation>
+    </portType>
+
+    
+
+    <binding name="ContableServiceHttp" type="tns:ContableService">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        
+        <operation name="saveOrden">
+            <soap:operation soapAction="http://services.contable.com//saveOrden"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+
+
+        <operation name="savePago">
+            <soap:operation soapAction="http://services.contable.com//savePago"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+
+    </binding>
+    
+
+    <service name="ContableService">
+        <port name="ContableServicePort" binding="tns:ContableServiceHttp">
+            <soap:address location="http://localhost/XXXXXXX/XXXXXX"/>
+        </port>
+</service>
+
+</definitions>
